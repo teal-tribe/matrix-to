@@ -47,18 +47,23 @@ export class Element {
         let fragmentPath;
         switch (link.kind) {
             case LinkKind.User:
-                fragmentPath = `user/${link.identifier}`;
+                fragmentPath = `user/${encodeURIComponent(link.identifier)}`;
                 break;
             case LinkKind.Room:
-                fragmentPath = `room/${link.identifier}`;
+                fragmentPath = `room/${encodeURIComponent(link.identifier)}`;
                 break;
             case LinkKind.Group:
-                fragmentPath = `group/${link.identifier}`;
+                fragmentPath = `group/${encodeURIComponent(link.identifier)}`;
                 break;
             case LinkKind.Event:
-                fragmentPath = `room/${link.identifier}/${link.eventId}`;
+                fragmentPath = `room/${encodeURIComponent(link.identifier)}/${encodeURIComponent(link.eventId)}`;
                 break;
         }
+
+        if ((link.kind === LinkKind.Event || link.kind === LinkKind.Room) && link.servers.length > 0) {
+            fragmentPath += '?' + link.servers.map(server => `via=${encodeURIComponent(server)}`).join('&');
+        }
+
         const isWebPlatform = platform === Platform.DesktopWeb || platform === Platform.MobileWeb;
         if (isWebPlatform) {
             let instanceHost = trustedWebInstances[0];
@@ -67,11 +72,11 @@ export class Element {
             if (isWebPlatform && trustedWebInstances.includes(link.webInstances[this.id])) {
                 instanceHost = link.webInstances[this.id];
             }
-            return `https://${instanceHost}/#/${encodeURIComponent(fragmentPath)}`;
+            return `https://${instanceHost}/#/${fragmentPath}`;
         } else if (platform === Platform.Linux || platform === Platform.Windows || platform === Platform.macOS) {
             return `element://vector/webapp/#/${encodeURIComponent(fragmentPath)}`;
         } else if (platform === Platform.iOS) {
-            	return `https://app.element.io/#/${encodeURIComponent(fragmentPath)}`;
+            return `https://app.element.io/#/${encodeURIComponent(fragmentPath)}`;
 	} else {
             return `element://${fragmentPath}`;
         }
