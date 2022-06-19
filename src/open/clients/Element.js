@@ -18,12 +18,7 @@ import {Maturity, Platform, LinkKind,
     FDroidLink, AppleStoreLink, PlayStoreLink, WebsiteLink} from "../types.js";
 
 const trustedWebInstances = [
-    "app.element.io",   // first one is the default one
-    "develop.element.io",
-    "chat.fedoraproject.org",
-    "chat.fosdem.org",
-    "chat.mozilla.org",
-    "webchat.kde.org",
+    "chat.tealtri.be",   // first one is the default one
 ];
 
 /**
@@ -65,7 +60,7 @@ export class Element {
                 break;
         }
         const isWebPlatform = platform === Platform.DesktopWeb || platform === Platform.MobileWeb;
-        if (isWebPlatform || platform === Platform.iOS) {
+        if (isWebPlatform) {
             let instanceHost = trustedWebInstances[0];
             // we use app.element.io which iOS will intercept, but it likely won't intercept any other trusted instances
             // so only use a preferred web instance for true web links.
@@ -75,7 +70,9 @@ export class Element {
             return `https://${instanceHost}/#/${encodeURIComponent(fragmentPath)}`;
         } else if (platform === Platform.Linux || platform === Platform.Windows || platform === Platform.macOS) {
             return `element://vector/webapp/#/${encodeURIComponent(fragmentPath)}`;
-        } else {
+        } else if (platform === Platform.iOS) {
+            	return `https://app.element.io/#/${encodeURIComponent(fragmentPath)}`;
+	} else {
             return `element://${fragmentPath}`;
         }
     }
