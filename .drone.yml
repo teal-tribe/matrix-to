@@ -1,0 +1,18 @@
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+  - name: build
+    image: plugins/docker
+    when:
+      event:
+        - tag
+    settings:
+      registry: registry.sporetri.be
+      username:
+        from_secret: REGISTRY_USERNAME
+      password:
+        from_secret: REGISTRY_PASSWORD
+      repo: registry.sporetri.be/${DRONE_REPO}
+      auto_tag: true

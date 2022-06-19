@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: registry.sporetri.be/matrix/matrix.to
+  repository: registry.sporetri.be/tealtribe/matrix-to
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
