@@ -6,7 +6,8 @@ WORKDIR /build
 
 COPY . .
 
-RUN yarn build
+RUN yarn && \
+	yarn build
 
 FROM nginx:latest AS image
 
